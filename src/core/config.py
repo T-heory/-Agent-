@@ -18,7 +18,10 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = 'DEBUG'
     LOG_DIR: str = 'logs'
 
-
+    REDIS_HOST: str = 'localhost'
+    REDIS_PORT: int = 6379
+    REDIS_PASSWORD: str = '123456'
+    REDIS_DB: int = 0
 
 
     @property

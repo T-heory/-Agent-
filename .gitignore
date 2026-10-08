@@ -1,0 +1,34 @@
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# ===== 虚拟环境 =====
+.venv/
+venv/
+env/
+ENV/
+
+# ===== IDE =====
+.idea/
+.vscode/
+*.swp
+
+# ===== 环境变量（含密钥，不提交） =====
+.env
+.env.*
+!.env.example
+
+# ===== Docker 挂载数据目录（中间件数据不提交） =====
+docker/.mysql/
+docker/minio_data/
+docker/redis_data/
+
+# ===== 日志 / 系统文件 =====
+*.log
+.DS_Store
+Thumbs.db

@@ -1,11 +1,10 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-
 #from src.modules.role.repository import RoleRepository
 from src.core.exceptions import BizException
 from src.modules.user.model import User
 from src.modules.user.schema import UserCreate
 from src.modules.user.repository import UserRepository
-#from src.utils.password_utils import hash_password
+from src.utils.password_utils import hash_password
 
 class UserService:
     def __init__(self, db: AsyncSession):
@@ -21,7 +20,7 @@ class UserService:
         user = User(
             username=data.username,
             email=data.email,
-            hashed_password=data.password,  # 项目开发时用 bcrypt 等加密
+            hashed_password=hash_password(data.password),  # 项目开发时用 bcrypt 等加密
         )
         return await self.repo.create(user)
 

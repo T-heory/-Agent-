@@ -8,8 +8,7 @@ from src.core.base_schema import ResponseSchema, PageResult
 from src.modules.user.schema import UserCreate, UserRead
 # from src.modules.user.schema import UserCreate, UserRead, UserAssignRoles, UserWithRolesRead
 from src.modules.user.service import UserService
-
-# from src.core.deps import get_current_user
+from src.core.deps import get_current_user
 
 router = APIRouter(prefix="/users", tags=["User"])
 
@@ -48,13 +47,12 @@ async def list_search_results(svc: UserService = Depends(get_user_service),
     )
     return ResponseSchema(data=page_result)
 """
-"""
+
 @router.get("/me", response_model=ResponseSchema[UserRead], summary="获取当前登录用户信息")
 async def get_current_user(
         current_user: User = Depends(get_current_user)
 ):
     return ResponseSchema(data=UserRead.model_validate(current_user))
-"""
 
 
 @router.get("/{user_id}", response_model=ResponseSchema[UserRead])
