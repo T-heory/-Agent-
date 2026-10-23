@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-#from src.modules.role.repository import RoleRepository
+from src.modules.role.repository import RoleRepository
 from src.core.exceptions import BizException
 from src.modules.user.model import User
 from src.modules.user.schema import UserCreate
@@ -9,7 +9,7 @@ from src.utils.password_utils import hash_password
 class UserService:
     def __init__(self, db: AsyncSession):
         self.repo = UserRepository(db)
-        #self.role_repo = RoleRepository(db)
+        self.role_repo = RoleRepository(db)
 
     async def create_user(self, data: UserCreate) -> User:
         if await self.repo.get_by_username(data.username):
@@ -32,21 +32,17 @@ class UserService:
 
     async def list_users(self, offset: int = 0, limit: int = 100):
         return await self.repo.get_all(offset=offset, limit=limit)
-"""
 
     async def assign_roles(self, user_id: int, role_ids: list[int]) -> User:
         # 1. 查找用户，不存在抛异常
         user = await self.repo.get_by_id(user_id)
         if not user:
             raise BizException(code=30001, message="用户不存在")
-
         # 2. 通过 RoleRepository.get_by_ids(role_ids) 批量查询角色
         role_list = await self.role_repo.get_by_ids(role_ids)
-
         # 3. 校验数量是否匹配
         if len(role_list) != len(role_ids):
             raise BizException(code=30002, message="有部分角色不存在")
-
         # 4. user.roles = role_list（整体替换）
         user.roles = role_list
         # 5. flush + refresh
@@ -69,5 +65,4 @@ class UserService:
         return await self.repo.search_page(offset, limit, keyword)
 
     async def delete_user(self, user_id: int) -> None:
-        await self.repo.delete_by_id(user_id)
-"""
+        await self.repo.delete(user_id)

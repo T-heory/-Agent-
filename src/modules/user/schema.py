@@ -1,4 +1,5 @@
 from pydantic import BaseModel,EmailStr
+from src.modules.role.schema import RoleRead
 
 class UserCreate(BaseModel):
     username:str
@@ -13,3 +14,14 @@ class UserRead(BaseModel):
     is_active:bool
 #配置了from_attributes:true，当前模型类可以直接从内存中orm模型对象的属性中读取数据
     model_config={'from_attributes':True}
+
+class UserWithRolesRead(BaseModel):
+    id:int
+    username:str
+    email:str
+    is_active:bool
+    roles:list[RoleRead]
+    model_config={"from_attributes":True}
+
+class UserAssignRoles(BaseModel):
+    role_ids:list[int]

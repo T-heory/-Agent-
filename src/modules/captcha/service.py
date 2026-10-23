@@ -49,6 +49,7 @@ class CaptchaService:
     async def verify_captcha(self,captcha:CaptchaVerifyRequest)->bool:
         #从redis中获取验证码
         key=f'{self.CAPTCHA_KEY_PREFIX}{captcha.key}'
+        print(key)
         stored_code=await self.redis.get(key)
         if not stored_code:
             raise BizException(code=10001,message='验证码不存在或已过期')

@@ -1,13 +1,13 @@
 from datetime import datetime,timedelta,timezone
 import jwt
-from sqlalchemy import from_dml_column
+
 
 SECRET_KEY='d99494bb12745dd56d8cad366bb168aa4a44a512993a9fa6f005c2fcadbb3bc9'
 ALGORITHM='HS256'
 
 #配置OAuth2 Bearer模式 fastapi自带的依赖项
 from fastapi.security import OAuth2PasswordBearer
-oauth2_schema=OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
+oauth2_scheme=OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
 
 
 #编码JWT 创建一个令牌 登录成功后把用户信息传递过来 生成的令牌发给前端

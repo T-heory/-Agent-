@@ -5,16 +5,21 @@ from src.middlewares.logging import LoggingMiddleware
 from src.core.exceptions import register_exception_handlers
 from src.core.logger import setup_logger
 from src.infra.database import engine
+
 from src.modules.user.api import router as user_router
 from src.modules.captcha.api import router as captcha_router
 from src.modules.auth.api import router as auth_router
+from src.modules.permission.api import router as permission_router
+from src.modules.role.api import router as role_router
 
-# 使用上下文管理器感知项目的生命周期
+# 使用上下文管理器感知项目的生命周期cc
 from contextlib import asynccontextmanager
 ROUTES=[
     (user_router,'/api/v1'),
     (captcha_router,'/api/v1'),
     (auth_router,'/api/v1'),
+    (permission_router,'/api/v1'),
+    (role_router,'/api/v1'),
 ]
 
 @asynccontextmanager
@@ -44,6 +49,7 @@ def create_app() -> FastAPI:
     # 注册路由
     for router,prefix in ROUTES:
         app.include_router(router,prefix=prefix)
+        #router是导入的路由实例，prefix是路由前缀，如/api/v1
     return app
 
 

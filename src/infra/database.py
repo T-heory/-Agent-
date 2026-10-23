@@ -17,7 +17,7 @@ engine = create_async_engine(
 # 异步数据库会话
 AsyncSessionLocal = async_sessionmaker(
     engine,
-    class_=AsyncSession,  # 创建出来的类
+    class_=AsyncSession,  # 调用会话工厂时，用这个类实例化一个会话对象
     expire_on_commit=False  # 提交事务后，会话是否过期
 )
 

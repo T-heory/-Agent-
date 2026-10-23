@@ -26,10 +26,19 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-#指定自己orm模型的全局元数据对象
+
+"""
+#在此处 指定自己orm模型的全局元数据对象
+"""
 import src.modules.user.model
+import src.modules.permission.model
+import src.modules.role.model
+"""
+上面导入的模型，都需要在全局元数据对象中注册
+"""
 from src.core.base_model import Base
 target_metadata = Base.metadata
+
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

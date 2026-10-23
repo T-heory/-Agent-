@@ -36,9 +36,6 @@ class BaseRepository(Generic[T]):
         await self.db.refresh(obj)
         return obj
 
-    async def delete(self, obj: T) -> None:
-        await self.db.delete(obj)
-        await self.db.flush()
 
     # 按照id删除； 异步方法要么 await 等待执行完，要么 使用 asyncio 交给线程池任务去执行
     async def delete_by_id(self, id: int) -> None:
