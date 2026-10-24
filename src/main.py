@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from loguru import logger
+from starlette.middleware.cors import CORSMiddleware
+
 from src.core.config import get_settings
 from src.middlewares.logging import LoggingMiddleware
 from src.core.exceptions import register_exception_handlers
@@ -44,6 +46,13 @@ def create_app() -> FastAPI:
     )
     # 注册中间件
     app.add_middleware(LoggingMiddleware)
+    #注册跨域中间件
+    app.add_middleware(CORSMiddleware,
+                       allow_origins=['*'],
+                       allow_credentials=True,
+                       allow_methods=['*'],
+                       allow_headers=['*']
+                       )
     # 注册异常处理器
     register_exception_handlers(app)
     # 注册路由

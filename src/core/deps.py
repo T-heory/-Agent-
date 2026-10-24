@@ -54,3 +54,8 @@ class PageParams:
     def offset(self) -> int:
        #计算 SQL OFFSET
         return (self.page - 1) * self.page_size
+    """
+    第一页 offset  return (self.page=1-1)*self.page_size=0 从第0条数据开始查询
+    第二页 offset  return (self.page=2-1)*self.page_size=10 从第10条数据开始查询
+    第三页 offset  return (self.page=3-1)*self.page_size=20 从第20条数据开始查询
+    """

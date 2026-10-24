@@ -53,6 +53,8 @@ class UserService:
     async def get_user_with_roles(self, user_id: int) -> User:
         # 和 get_user 一样，但返回的 User 对象会自动带上 roles
         user = await self.repo.get_by_id(user_id)
+        if not user:
+            raise BizException(code=404, message="用户不存在")
 
         # 因为 User.roles 设置了 lazy="selectin"，所以不需要额外操作
         # user.roles  # 如果懒加载模式， . 一下，触发数据库查询即可
@@ -65,4 +67,4 @@ class UserService:
         return await self.repo.search_page(offset, limit, keyword)
 
     async def delete_user(self, user_id: int) -> None:
-        await self.repo.delete(user_id)
+        await self.repo.delete_by_id(user_id)

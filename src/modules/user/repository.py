@@ -21,10 +21,7 @@ class UserRepository(BaseRepository[User]):
         result = await self.db.execute(stmt)
         return result.scalar_one_or_none()
 
-
-"""
-   async def search_page(self, offset: int,
+    async def search_page(self, offset: int,
                         limit: int,
                         keyword: str | None) -> tuple[list[User], int]:
-      return await self.get_page(offset, limit,keyword,self.SEARCH_FIELDS)
- """
+        return await self.get_page(offset, limit,keyword,self.SEARCH_FIELDS)

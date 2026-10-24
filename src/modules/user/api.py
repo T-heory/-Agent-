@@ -1,4 +1,4 @@
-# from src.core.deps import PageParams
+from src.core.deps import PageParams
 from src.modules.role.schema import RoleRead
 from src.modules.user.model import User
 from fastapi import APIRouter, Depends
@@ -29,11 +29,10 @@ async def create_users(
     return ResponseSchema(data=UserRead.model_validate(user))
 
 
-"""
+
 @router.get("/search", response_model=ResponseSchema[PageResult[UserRead]], summary="分页搜索用户")
 async def list_search_results(svc: UserService = Depends(get_user_service),
                               params: PageParams = Depends()):
-    分页搜索权限
     users, total_count = await svc.search_page(params.offset, params.page_size, params.keyword)
 
     # 列表推导式
@@ -45,7 +44,7 @@ async def list_search_results(svc: UserService = Depends(get_user_service),
         page_size=params.page_size,
     )
     return ResponseSchema(data=page_result)
-"""
+
 
 @router.get("/me", response_model=ResponseSchema[UserRead], summary="获取当前登录用户信息")
 async def get_current_user(
@@ -54,7 +53,7 @@ async def get_current_user(
     return ResponseSchema(data=UserRead.model_validate(current_user))
 
 
-@router.get("/{user_id}", response_model=ResponseSchema[UserWithRolesRead])
+@router.get("/{user_id}", response_model=ResponseSchema[UserWithRolesRead],summary='获取用户信息')
 async def get_user(
         user_id: int,
         svc: UserService = Depends(get_user_service),
@@ -63,7 +62,7 @@ async def get_user(
     return ResponseSchema(data=UserWithRolesRead.model_validate(user))
 
 
-@router.get("", response_model=ResponseSchema[list[UserRead]])
+@router.get("/", response_model=ResponseSchema[list[UserRead]],summary='分页查询用户')
 async def list_users(
         offset: int = 0, 
         limit: int = 100,
@@ -75,7 +74,7 @@ async def list_users(
 
 
 # PUT	/api/v1/users/{user_id}/roles	给用户分配角色
-@router.put("/{user_id}/roles", response_model=ResponseSchema[UserWithRolesRead])
+@router.put("/{user_id}/roles", response_model=ResponseSchema[UserWithRolesRead],summary='给用户分配角色')
 async def user_assign_roles(
         user_id: int,
         roles: UserAssignRoles,
@@ -87,7 +86,7 @@ async def user_assign_roles(
 
 
 # GET	/api/v1/users/{user_id}/roles	查看用户的角色列表
-@router.get("/{user_id}/roles", response_model=ResponseSchema[list[RoleRead]])
+@router.get("/{user_id}/roles", response_model=ResponseSchema[list[RoleRead]],summary='查看用户的角色列表')
 async def get_user_roles_list(
         user_id: int,
         svc: UserService = Depends(get_user_service),

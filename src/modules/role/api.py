@@ -1,12 +1,10 @@
 from src.core.deps import PageParams
-from src.modules.role.schema import RoleAssignPermissions
 from src.modules.permission.schema import PermissionRead
 from src.core.base_schema import ResponseSchema, PageResult
 from src.modules.role.schema import RoleRead
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.modules.role.schema import RoleCreate, RoleUpdate, RoleAssignPermissions
-
 from src.modules.role.service import RoleService
 from src.infra.database import get_db
 
@@ -34,6 +32,7 @@ async def list_search_results(svc: RoleService = Depends(get_role_service),
         page=params.page,
         page_size=params.page_size,
     ))
+
 # POST  /api/v1/roles   创建角色
 @router.post("", response_model=ResponseSchema[RoleRead],summary='创建角色')
 async def create_role(role: RoleCreate, service: RoleService = Depends(get_role_service)):
@@ -69,7 +68,7 @@ async def delete_role(role_id: int, service: RoleService = Depends(get_role_serv
     return ResponseSchema[None](data=None)
 
 # PUT   /api/v1/roles/{role_id}/permissions 给角色分配权限
-@router.put("/{role_id}/permissions", response_model=ResponseSchema[RoleRead])
+@router.put("/{role_id}/permissions", response_model=ResponseSchema[RoleRead],summary='给角色分配权限')
 async def update_role_permissions(role_id: int, role_permissions: RoleAssignPermissions,
         service: RoleService = Depends(get_role_service)):
     data = await service.assign_permissions(role_id, role_permissions.permission_ids)

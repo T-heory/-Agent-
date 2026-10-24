@@ -1,10 +1,13 @@
 from fastapi import APIRouter
-from fastapi.params import Depends
-from src.core.base_schema import ResponseSchema
+from fastapi import Depends
+from src.core.base_schema import ResponseSchema,PageResult
+from src.core.deps import PageParams
+from src.modules.permission.repository import PermissionRepository
 from src.modules.permission.service import PermissionService
 from src.modules.permission.schema import PermissionRead,PermissionCreate,PermissionUpdate
 from src.infra.database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
+
 
 
 router=APIRouter(prefix="/permission",tags=["权限"])
@@ -12,8 +15,20 @@ router=APIRouter(prefix="/permission",tags=["权限"])
 def get_permission_service(db:AsyncSession=Depends(get_db))->PermissionService:
     return PermissionService(db)
 
+@router.get('/search',response_model=ResponseSchema[PageResult[PermissionRead]],summary='分页查询权限')
+async def list_search_results(svc:PermissionService=Depends(get_permission_service),
+                              params:PageParams=Depends()):
+    perms,total_count=await svc.search_page(params.offset,params.page_size,params.keyword)
+    perms=[PermissionRead.model_validate(perm) for perm in perms]
+    return ResponseSchema(data= PageResult(
+        items=perms,
+        total=total_count,
+        page=params.page,
+        page_size=params.page_size
+    )
+)
 
-@router.get('{permission_id}',response_model=ResponseSchema[PermissionRead],summary='获取权限详情')
+@router.get('/{permission_id}',response_model=ResponseSchema[PermissionRead],summary='获取权限详情')
 async def get_permissions(permission_id:int,
                          svc:PermissionService=Depends(get_permission_service)
                         )->PermissionRead:
@@ -33,15 +48,16 @@ async def create_permission(data:PermissionCreate,
     perm=await svc.create_permission(data)
     return ResponseSchema(data=PermissionRead.model_validate(perm))
 
-@router.put('{permission_id}',response_model=ResponseSchema[PermissionRead],summary='更新权限')
+@router.put('/{permission_id}',response_model=ResponseSchema[PermissionRead],summary='更新权限')
 async def update_permission(permission_id:int,
                             data:PermissionUpdate,
                             svc:PermissionService=Depends(get_permission_service)):
     perm=await svc.update_permission(permission_id,data)
     return ResponseSchema(data=PermissionRead.model_validate(perm))
 
-@router.delete('{permission_id}',response_model=ResponseSchema,summary='删除权限')
+@router.delete('/{permission_id}',response_model=ResponseSchema,summary='删除权限')
 async def delete_permission(permission_id:int,
                             svc:PermissionService=Depends(get_permission_service)):
     await svc.delete_permission(permission_id)
     return ResponseSchema(message='Permission删除成功')
+
